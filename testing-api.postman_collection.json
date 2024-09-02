@@ -1,0 +1,597 @@
+{
+	"info": {
+		"_postman_id": "3659a231-dd7f-4461-a3a5-3f55f8d65ac4",
+		"name": "testing-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38048515"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.value).to.eql(100);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "getting registration page",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Accept-Ranges",
+							"value": "bytes"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "public, max-age=0"
+						},
+						{
+							"key": "Last-Modified",
+							"value": "Wed, 28 Aug 2024 06:49:12 GMT"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"43e-19197beda03\""
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1086"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Sep 2024 07:25:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "<!DOCTYPE html>\n<html>\n    <head>\n        <meta charset=\"UTF-8\">\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n        <title>Register</title>\n        <link rel=\"stylesheet\" href=\"styles.css\">\n    \n    </head>\n    <body>\n        <nav>\n            <ul>\n                <li>\n                    <a href=\"index.html\">Home </a>\n                </li>\n                <li>\n                    <a href=\"login.html\">Already a member? Click here to Log in </a>\n                </li>\n            </ul>\n        </nav>\n        <header>\n            <h2> Register here to track your expenses</h2>\n        </header>\n        <form id=\"register-form\">\n            <label for=\"username\">username</label>\n            <input type=\"text\" id=\"username\" name=\"username\">\n            <br>\n            <label for=\"email\">Email address</label>\n            <input type=\"email\" id=\"email\" name=\"email\">\n            <br>\n            <label for=\"password\">Password</label>\n            <input type=\"password\" id=\"password\" name=\"password\">\n            <br>\n            <button type=\"submit\"> Register</button>\n        </form>\n        <script src=\"script.js\"></script>\n    </body>\n</html>"
+				},
+				{
+					"name": "getting to login page",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Accept-Ranges",
+							"value": "bytes"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "public, max-age=0"
+						},
+						{
+							"key": "Last-Modified",
+							"value": "Thu, 29 Aug 2024 12:21:28 GMT"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3ca-1919e1565a7\""
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "970"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Sep 2024 07:26:13 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "<!DOCTYPE html>\n<html lang=\"en\">\n    <head>\n        <meta charset=\"UTF-8\">\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n        <title>login</title>\n        <link rel=\"stylesheet\" href=\"styles.css\">\n\n    \n    </head>\n    <body>\n        <nav>\n            <ul>\n                <li>\n                    <a href=\"index.html\">Home </a>\n                </li>\n                <li>\n                    <a href=\"register.html\">New here? Click here to register </a>\n                </li>\n            </ul>\n        </nav>\n        <Header>\n            <h1> Log in to track your expenses</h1>\n        </Header>\n        <br>\n        <form id=\"login-form\">\n            <label for=\"email\">email</label>\n            <input type=\"email\" id=\"email\" name=\"email\">\n            <br>\n            <label for=\"password\">Password</label>\n            <input type=\"password\" id=\"password\" name=\"password\">\n            <br>\n            <button type=\"submit\"> log in</button>\n        </form>\n        <script src='login.js'></script>\n    </body>\n</html>"
+				}
+			]
+		},
+		{
+			"name": "registering a new user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"test2@example.com\",\n  \"username\": \"testuser2\",\n  \"password\": \"password123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/register",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "registering a new user",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test3@example.com\",\n  \"username\": \"testuser3\",\n  \"password\": \"password123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "24"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"18-z2uw2FIbIcFSqkFVBTM7ZqMm7aw\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Sep 2024 08:09:28 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "Registration successful!"
+				}
+			]
+		},
+		{
+			"name": "logging in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "logging in",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "30"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1e-DOWvfMhj05v4eN+mg6AlHJrIPp8\""
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "connect.sid=s%3AhXb119n7XwzTsPYQ686382b5VmpxVDbK.aLnLtAJI8NxPNuoLLRU%2ByWKQ7w1DPGMJj4G%2FiQNFGKM; Path=/; HttpOnly; SameSite=Strict"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Sep 2024 08:09:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Login successful\"\n}"
+				}
+			]
+		},
+		{
+			"name": "adding an expense",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"Groceries\",\n  \"amount\": 123.45,\n  \"date\": \"2024-08-31\",\n  \"category\": \"Food\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/add_expense",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"add_expense"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "adding an expense",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Groceries\",\n  \"amount\": 123.45,\n  \"date\": \"2024-08-31\",\n  \"category\": \"Food\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/add_expense",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"add_expense"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "88"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"58-GYnI6xCPQ8m43EveHbtsPptEmcM\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Sep 2024 08:09:48 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 5,\n    \"description\": \"Groceries\",\n    \"amount\": 123.45,\n    \"date\": \"2024-08-31\",\n    \"category\": \"Food\"\n}"
+				}
+			]
+		},
+		{
+			"name": "view expenses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/expenses",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"expenses"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "view expenses",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/expenses",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"expenses"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1121"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"461-qvnDqOD5xSvM7KnA/sIdBdSWVus\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Sep 2024 08:09:54 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"expense_id\": 1,\n        \"user_id\": null,\n        \"category_id\": null,\n        \"amount\": \"12.00\",\n        \"date\": \"2024-08-19T21:00:00.000Z\",\n        \"description\": \"tea\",\n        \"created_at\": \"2024-08-28T19:22:26.000Z\",\n        \"updated_at\": \"2024-08-28T19:22:26.000Z\",\n        \"category\": \"food\"\n    },\n    {\n        \"expense_id\": 2,\n        \"user_id\": null,\n        \"category_id\": null,\n        \"amount\": \"20.00\",\n        \"date\": \"2024-08-19T21:00:00.000Z\",\n        \"description\": \"books\",\n        \"created_at\": \"2024-08-29T12:08:10.000Z\",\n        \"updated_at\": \"2024-08-29T12:08:10.000Z\",\n        \"category\": \"Other\"\n    },\n    {\n        \"expense_id\": 3,\n        \"user_id\": null,\n        \"category_id\": null,\n        \"amount\": \"20.00\",\n        \"date\": \"2024-08-30T21:00:00.000Z\",\n        \"description\": \"coffee\",\n        \"created_at\": \"2024-08-31T07:22:50.000Z\",\n        \"updated_at\": \"2024-08-31T07:22:50.000Z\",\n        \"category\": \"food\"\n    },\n    {\n        \"expense_id\": 4,\n        \"user_id\": null,\n        \"category_id\": null,\n        \"amount\": \"123.45\",\n        \"date\": \"2024-08-30T21:00:00.000Z\",\n        \"description\": \"Groceries\",\n        \"created_at\": \"2024-09-02T07:43:48.000Z\",\n        \"updated_at\": \"2024-09-02T07:43:48.000Z\",\n        \"category\": \"Food\"\n    },\n    {\n        \"expense_id\": 5,\n        \"user_id\": null,\n        \"category_id\": null,\n        \"amount\": \"123.45\",\n        \"date\": \"2024-08-30T21:00:00.000Z\",\n        \"description\": \"Groceries\",\n        \"created_at\": \"2024-09-02T08:09:48.000Z\",\n        \"updated_at\": \"2024-09-02T08:09:48.000Z\",\n        \"category\": \"Food\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "logout",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "html",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Accept-Ranges",
+							"value": "bytes"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "public, max-age=0"
+						},
+						{
+							"key": "Last-Modified",
+							"value": "Thu, 29 Aug 2024 12:21:28 GMT"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3ca-1919e1565a7\""
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/html; charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "970"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 02 Sep 2024 08:10:01 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "<!DOCTYPE html>\n<html lang=\"en\">\n    <head>\n        <meta charset=\"UTF-8\">\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n        <title>login</title>\n        <link rel=\"stylesheet\" href=\"styles.css\">\n\n    \n    </head>\n    <body>\n        <nav>\n            <ul>\n                <li>\n                    <a href=\"index.html\">Home </a>\n                </li>\n                <li>\n                    <a href=\"register.html\">New here? Click here to register </a>\n                </li>\n            </ul>\n        </nav>\n        <Header>\n            <h1> Log in to track your expenses</h1>\n        </Header>\n        <br>\n        <form id=\"login-form\">\n            <label for=\"email\">email</label>\n            <input type=\"email\" id=\"email\" name=\"email\">\n            <br>\n            <label for=\"password\">Password</label>\n            <input type=\"password\" id=\"password\" name=\"password\">\n            <br>\n            <button type=\"submit\"> log in</button>\n        </form>\n        <script src='login.js'></script>\n    </body>\n</html>"
+				}
+			]
+		}
+	]
+}

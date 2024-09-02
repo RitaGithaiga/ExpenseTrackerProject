@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Add Expense</title>
+        <link rel="stylesheet" href="styles.css">
+
+    </head>
+    <body>
+        <nav>
+            <ul>
+            <li><a href="index.html">Home </a></li> 
+            <li><a href="View_expense.html">View expenses </a></li> 
+
+            </ul>
+        </nav>
+        <header>
+            <h2>Add expense</h2>
+        </header>
+    </Header>
+    <form id="add_expense-form">
+        <label for="decription">description</label>
+        <input type="text" id="description" name="description">
+        <br>
+        <label for="amount">Cost</label>
+        <input type="decimal" id="amount" name="amount">
+        <br>
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date">
+        <br>
+        <label for="category">category</label>
+        <select id="category" name="category">
+            <option value="food">food</option>
+            <option value="transport">transport</option>
+            <option value="entertainment">entertainment</option>
+            <option value="rent">rent</option>
+            <option value="Other">Other</option>
+        </select>
+        <br>
+        <button type="submit"> Save</button>
+    </form>
+    <script src="add_expense.js"></script>
+    </body>
+</html>
