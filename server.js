@@ -1,17 +1,66 @@
 const express = require('express');
-const mysql = require('mysql2');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 const path = require('path');
 const { check, validationResult } = require('express-validator');
 const dotenv = require('dotenv');
+const { Sequelize, DataTypes } = require('sequelize');
 dotenv.config();
 
-//initialize
+// Initialize Sequelize
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    dialect: 'mysql',
+    logging: false
+});
+
+// Define User model
+const User = sequelize.define('User', {
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
+    tableName: 'users'
+});
+
+// Define Expense model
+const Expense = sequelize.define('Expense', {
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    amount: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
+    date: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    category: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
+    tableName: 'expenses'
+});
+
+// Initialize Express app
 const app = express();
 
-//configure - middleware
+// Middleware
 app.use(express.static(__dirname));
 app.use(express.json());
 app.use(bodyParser.json());
@@ -23,197 +72,149 @@ app.use(session({
     secret: 'uwebuiwebciuwebcwecubweubweofbweofbowebfouwbfuowerb',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production',
+    store: new (require('connect-session-sequelize')(session.Store))({
+        db: sequelize
+    }),
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         sameSite: 'strict'
-     } 
+    }
 }));
 
-//create connection
-const connection  = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-
-});
-
-connection.connect((err) => {
-    if(err){
-        console.error('Error occured while connecting to the db server: ' + err.stack);
-        return;
-    }
+// Test DB Connection
+sequelize.authenticate().then(() => {
     console.log('DB Server connected successfully.');
+}).catch(err => {
+    console.error('Error occurred while connecting to the DB server: ' + err.message);
 });
 
-//define route to registration form
-app.get('/register', (request, response) => {
-    response.sendFile(path.join(__dirname, 'register.html'));
+// Define routes
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'register.html'));
 });
 
-//display login page
-app.get('/login', (request, response) => {
-    response.sendFile(path.join(__dirname, "login.html"));
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-//define a User object - registration
-const User = {
-    tableName: 'users',
-    createUser: function(newUser, callback){
-        connection.query('INSERT INTO ' + this.tableName + ' SET ?', newUser, callback);
-    },
-    getUserByEmail: function(email, callback){
-        connection.query('SELECT * FROM ' + this.tableName + ' WHERE email = ?', email, callback);
-    },
-    getUserByUsername: function(username, callback){
-        connection.query('SELECT * FROM ' + this.tableName + ' WHERE username = ?', username, callback);
-    },
-}
-
-//define registration route and logic
 app.post('/register', [
-    //validation check
-    check('email').isEmail().withMessage('Provide valid email address.'),
-    check('username').isAlphanumeric().withMessage('Invalid username. Provide aplhanumeric values.'),
-
-    check('email').custom( async(value) => {
-        const exist = await User.getUserByEmail(value);
-        if(exist){
+    check('email').isEmail().withMessage('Provide a valid email address.'),
+    check('username').isAlphanumeric().withMessage('Invalid username. Provide alphanumeric values.'),
+    check('email').custom(async (value) => {
+        const user = await User.findOne({ where: { email: value } });
+        if (user) {
             throw new Error('Email already exists');
         }
     }),
-    check('username').custom( async(value) => {
-        const exist = await User.getUserByUsername(value);
-        if(exist){
+    check('username').custom(async (value) => {
+        const user = await User.findOne({ where: { username: value } });
+        if (user) {
             throw new Error('Username already in use.');
         }
     })
-], async (request, response) => {
-    //check for validation
-    const errors = validationResult(request);
-    if(!errors.isEmpty()){
-        return response.status(400).json({ errors: errors.array() });
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
 
-    //hash password
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
-    //define a new user object
-    const newUser = {
-        email: request.body.email,
-        username: request.body.username,
-        password: hashedPassword
+    try {
+        await User.create({
+            email: req.body.email,
+            username: req.body.username,
+            password: hashedPassword
+        });
+        res.status(201).send('Registration successful!');
+    } catch (error) {
+        console.error('An error occurred while saving the record: ' + error.message);
+        res.status(500).json({ error: error.message });
     }
-
-    //save new user
-    User.createUser(newUser, (error) => {
-        if(error){
-            console.error('An error occurred while saving the record: ' + error.message);
-            return response.status(500).json({ error: error.message });
-        }
-        console.log('New user record saved!');
-        response.status(201).send('Registration successful!');
-    });
-
 });
 
-//handle the login logic - authentication
-app.post('/login', (request, response) => {
-    const { email, password } = request.body;
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
 
-    connection.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
-        if(err) return response.status(500).send('Server error');
-        if(results.length === 0) {
-            response.status(401).send('Invalid email or password.');
+    try {
+        const user = await User.findOne({ where: { email: email } });
+        if (!user) {
+            return res.status(401).send('Invalid email or password.');
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (isMatch) {
+            req.session.user = user;
+            res.status(200).json({ message: 'Login successful' });
         } else {
-            const user = results[0];
-            //compare passwords
-            bcrypt.compare(password, user.password, (err, isMatch) => {
-                if(err)return response.status(500).send('Server error');
-                if(isMatch){
-                    //storing user data to the session variable
-                    request.session.user = user;
-                    response.status(200).json({ message: 'Login successful' });
-                } else {
-                    response.status(401).send('Invalid username or password.');
-                }
-            }); 
+            res.status(401).send('Invalid email or password.');
         }
-    });
+    } catch (error) {
+        res.status(500).send('Server error');
+    }
 });
 
-//handle authorization
-const userAuthenticated = (request, response, next) => {
-    if(request.session.user){
+const userAuthenticated = (req, res, next) => {
+    if (req.session.user) {
         next();
     } else {
-        response.redirect('/login');
+        res.redirect('/login');
     }
 }
 
-//secure route
-app.get('/dashboard', userAuthenticated, (request, response) => {
-    response.status(200).json({ message: 'You are viewing a secured route.'});
+app.get('/dashboard', userAuthenticated, (req, res) => {
+    res.status(200).json({ message: 'You are viewing a secured route.' });
 });
 
-//adding an expense
-app.get('/add_expense', (request, response) => {
-    response.sendFile(path.join(__dirname, "add_expense.html"));
+app.get('/add_expense', (req, res) => {
+    res.sendFile(path.join(__dirname, 'add_expense.html'));
 });
 
 app.post('/add_expense', async (req, res) => {
     const { description, amount, date, category } = req.body;
-  
-    if (!description || amount == null || !category) {
-      return res.status(400).json({ message: 'Description, amount, and category are required' });
-    }
-  
-    const query = 'INSERT INTO expenses (description, amount, date, category) VALUES (?, ?, ?, ?)';
-    const values = [description, amount, date, category];
-  
-    connection.query(query, values, (error, results) => {
-        if (error) {
-            console.error('Error saving expense:', error);
-            return res.status(500).json({ message: 'Server error', error });
-        }
-        res.status(201).json({ id: results.insertId, description, amount, date, category });
-    });
-  });
-  
 
-//retrieving and displaying expenses
-app.get('/expenses', (req, res) => {
+    if (!description || amount == null || !category) {
+        return res.status(400).json({ message: 'Description, amount, and category are required' });
+    }
+
+    try {
+        const expense = await Expense.create({
+            description,
+            amount,
+            date,
+            category
+        });
+        res.status(201).json(expense);
+    } catch (error) {
+        console.error('Error saving expense:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+});
+
+app.get('/expenses', async (req, res) => {
     const { date } = req.query;
 
-    let sql = 'SELECT * FROM expenses';
-    const params = [];
-
-    if (date) {
-        sql += ' WHERE date = ?';
-        params.push(date);
+    try {
+        const expenses = date ? 
+            await Expense.findAll({ where: { date } }) : 
+            await Expense.findAll();
+        res.json(expenses);
+    } catch (error) {
+        console.error('Error fetching expenses:', error);
+        res.status(500).send('Error retrieving expenses');
     }
-
-    connection.query(sql, params, (err, results) => {
-        if (err) {
-            console.error('Error fetching expenses:', err);
-            return res.status(500).send('Error retrieving expenses');
-        }
-        res.json(results);
-    });
 });
 
-
-//destroy session
-app.get('/logout', (request, response) => {
-    request.session.destroy(err => {
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
         if (err) {
-            return response.status(500).send('Error during logout');
+            return res.status(500).send('Error during logout');
         }
-        response.redirect('/login');
+        res.redirect('/login');
     });
 });
-
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');
