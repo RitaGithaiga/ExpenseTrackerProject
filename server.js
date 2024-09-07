@@ -1,12 +1,19 @@
 const express = require('express');
 const mysql = require('mysql2');
 const session = require('express-session');
+const RedisStore = require('connect-redis').default;
+
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 const path = require('path');
 const { check, validationResult } = require('express-validator');
 const dotenv = require('dotenv');
 dotenv.config();
+const redisClient = require('redis').createClient({
+    host: process.env.REDIS_HOST || 'localhost',
+    port: process.env.REDIS_PORT || 6379
+});
+
 
 //initialize
 const app = express();
@@ -20,7 +27,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configure session middleware
 app.use(session({
-    secret: 'uwebuiwebciuwebcwecubweubweofbweofbowebfouwbfuowerb',
+    store: new RedisStore({client: redisClient}),
+    secret: process.env.SESSION_SECRET || 'uwebuiwebciuwebcwecubweubweofbweofbowebfouwbfuowerb',
     resave: false,
     saveUninitialized: false,
     cookie: { secure: process.env.NODE_ENV === 'production',
